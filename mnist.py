@@ -23,12 +23,17 @@ y_train, y_test = tf.one_hot(y_train, 10), tf.one_hot(y_test, 10)
 train_data = tf.data.Dataset.from_tensor_slices((x_train, y_train))
 train_data = train_data.shuffle(500).batch(32)
 
+# Train model
 model.compile(optimizer='adam', loss='categorical_crossentropy')
 model.fit(train_data)
 
+# Create Accuracy calculation
 def accuracy(y_pred, y_true):
     correct_prediction = tf.equal(tf.argmax(y_pred,-1), tf.argmax(y_true, -1))
     return tf.reduce_mean(tf.cast(correct_prediction, tf.float32), axis =-1)
 
+# Run model on test data
 pred = model(x_test)
+
+# Output accuracy of the model compared to the test values 
 print(f'Test accuracy:{accuracy(pred, y_test)}')
